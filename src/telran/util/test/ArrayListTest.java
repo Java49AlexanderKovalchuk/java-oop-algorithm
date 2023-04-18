@@ -11,8 +11,8 @@ import telran.util.*;
 
 class ArrayListTest {
 
+private static final int BIG_LENGTH = 100000;
 List<Integer> list;
-
 Integer[] numbers = {10, -20, 7, 50, 100, 30};
 
 @BeforeEach  
@@ -89,6 +89,80 @@ void setUp() {
 		assertEquals(3, list.size());
 		runTest(expectedNo10_50_30);
 		
+	}
+	
+	@Test
+	void testToArrayForBigArray() {
+		Integer bigArray[] = new Integer[BIG_LENGTH];
+		for(int i = 0; i < BIG_LENGTH; i++) {
+			bigArray[i] = 10;
+		}
+		Integer actualArray[] = list.toArray(bigArray);
+		int size = list.size();
+		for(int i = 0; i < size; i++) {
+			assertEquals(numbers[i], actualArray[i]);
+		}
+		assertNull(actualArray[size]);
+		assertTrue(bigArray == actualArray);
+	}
+	
+	@Test
+	void testToArrayForEmptyArray() {
+		Integer actualArray[] = list.toArray(new Integer[0]);
+		assertArrayEquals(numbers, actualArray);
+	}
+	
+	@Test
+	void testSort() {
+		Integer expected[] = {-20, 7, 10, 30, 50, 100 };
+		list.sort();
+		assertArrayEquals(expected, list.toArray(new Integer[0]));
+	}
+	
+	
+	@Test
+	void testSortPersons() {
+		List<Person> persons = new ArrayList<>();
+		Person p1 = new Person(123, 25, "Vasya");
+		Person p2 = new Person(124, 20, "Asaf");
+		Person p3 = new Person(120, 50, "Arkady");
+		persons.add(p1);
+		persons.add(p2);
+		persons.add(p3);
+		Person expected[] = {p3, p1, p2};
+		persons.sort();
+		assertArrayEquals(expected, persons.toArray(new Person[0]));
+	}
+	
+	@Test
+	void testSortPersonsByAge() {
+		List<Person> persons = new ArrayList<>();
+		Person p1 = new Person(123, 25, "Vasya");
+		Person p2 = new Person(124, 20, "Asaf");
+		Person p3 = new Person(120, 50, "Arkady");
+		persons.add(p1);
+		persons.add(p2);
+		persons.add(p3);
+		Person expected[] = {p3, p1, p2};
+		persons.sort(new PersonsAgeComparator());
+		assertArrayEquals(expected, persons.toArray(new Person[0]));
+	}
+	
+	@Test
+	void testSortBubble() {
+		Integer expected[] = {-20, 7, 10, 30, 50, 100 };
+		list.sort(new ComparatorInteger());
+		assertArrayEquals(expected, list.toArray(new Integer[0]));
+		
+	}
+	
+	@Test
+	void testSortEvenOdd() {
+		Integer n = 17;
+		list.add(n);
+		list.sort(new EvenOddComparator());
+		Integer expected[] = {-20, 10, 30, 50, 100, 17, 7};
+		assertArrayEquals(expected, list.toArray(new Integer[0]));
 	}
 	
 	private void runTest(Integer[] expected) {

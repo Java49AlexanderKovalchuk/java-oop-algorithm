@@ -1,6 +1,7 @@
 package telran.util;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 import telran.util.*;
 
@@ -66,20 +67,7 @@ public class ArrayList<T> implements List<T> {
 	
 	@Override
 	public boolean remove(T pattern) {
-		// TODO 
-		//my first solution:
-		//boolean resRet = false;
-//		int index = 0;
-//		while(index < size && resRet == false) {
-//			if(isEqual(array[index], pattern)) {
-//				resRet = true;
-//				System.arraycopy(array, index + 1, array, index, size - index - 1);
-//				size--;
-//			}
-//			index++;
-//		}		
-//		return resRet;
-		//second solution:
+				
 		boolean res = true;
 		int index = indexOf(pattern);
 		if(index < 0) {
@@ -90,9 +78,15 @@ public class ArrayList<T> implements List<T> {
 	}
 	
 	@Override
-	public T[] toArray(T[] array) {
-		// TODO Auto-generated method stub
-		return null;
+	public T[] toArray(T[] ar) {
+		if(ar.length < size) {
+		ar = Arrays.copyOf(ar, size); 
+		}
+		System.arraycopy(array, 0, ar, 0, size);
+		if(ar.length > size) {
+			ar[size] = null;
+		}
+		return ar;
 	}
 	
 	@Override
@@ -114,7 +108,6 @@ public class ArrayList<T> implements List<T> {
 	
 	@Override
 	public int lastIndexOf(T pattern) {
-		//TODO
 		int res = -1;
 		int index = size - 1;
 		while(index >=  0 && res == -1) {
@@ -124,6 +117,29 @@ public class ArrayList<T> implements List<T> {
 			index--;
 		}
 		return res;
+	}
+	@Override
+	public void sort() {
+		Arrays.sort(array, 0, size);		
+	}
+	@Override
+	public void sort(Comparator<T> comp) {
+		//Arrays.sort(array, 0, size, comp); 
+		
+		//1, 3, 2, 0,  5 
+		boolean flag = true;
+		int j = size;
+		while(flag) {
+			flag = false;
+			for(int i = 1; i < j; i++) {
+				if(comp.compare(array[i - 1], array[i]) > 0) {
+					T tmp = array[i];
+					array[i] = array[i - 1];
+					array[i - 1] = tmp;
+					flag = true;
+				}
+			}
+		}
 	}
 	
 }
