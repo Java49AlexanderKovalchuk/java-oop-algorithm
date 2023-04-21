@@ -3,21 +3,15 @@ package telran.util.test;
 import java.util.Comparator;
 
 public class EvenOddComparator implements Comparator<Integer> {
+	
 	@Override
-	public int compare(Integer el1, Integer el2) {
-		
-		if(el1 % 2 == 0 && el2 %2 == 0) {
-			return el1 - el2;
+	public int compare(Integer o1, Integer o2) {
+		int res = Integer.compare(Math.abs(o1 % 2), Math.abs(o2 % 2));
+		if(res == 0) {
+			res = o1 % 2 == 0 ? Integer.compare(o1, o2) : 
+				Integer.compare(o2,  o1);
 		}
-		if(el1 % 2 != 0 && el2 %2 != 0) {
-			return el2 - el1;
-		}
-		if(el1 % 2 != 0 && el2 % 2 == 0) {
-			return 1;
-		}
-		if(el1 % 2 == 0 && el2 % 2 != 0) {
-			return -1;
-		}
-		return 0;
+		return res; 		
 	}
+	
 }

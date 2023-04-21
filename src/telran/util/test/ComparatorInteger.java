@@ -7,5 +7,6 @@ public class ComparatorInteger implements Comparator<Integer>{
 	public int compare(Integer el1, Integer el2) {
 		//return el1.compareTo(el2);
 		return el1.compareTo(el2);
+		
 	}
 }
