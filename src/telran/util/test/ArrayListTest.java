@@ -219,6 +219,13 @@ void setUp() {
 		assertEquals(0, list.size());
 		
 	}
+	@Test
+	void testRemoveIfPredicate() {
+		Integer[] expected = {10, -20, 50, 100, 30};
+		assertFalse(list.removeIf(a -> a % 2 != 0 && a >= 10));
+		assertTrue(list.removeIf(a -> a % 2 != 0));
+		runTest(expected);
+	}
 	
 	static private int evenOddCompare(Integer a, Integer b) {
 		int res = Math.abs(a % 2) - Math.abs(b % 2);
