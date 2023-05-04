@@ -2,8 +2,6 @@
 
 import java.util.Comparator;
 
-import javax.sound.midi.MidiChannel;
-
 public class InitialAlgorithms {
 	
 	public static void sortShortPositive(short[] array) {
@@ -23,22 +21,7 @@ public class InitialAlgorithms {
 	}
 	
 	public static boolean isSum2(short[] array, short sum) {
-//		int[]helper = new int [sum + 1];
-//		for(int i = 0; i <= sum; i++) {
-//			helper[array[i]]++;
-//		}
-//		boolean flag = false;
-//		short index = 0;
-//		while((index <= sum - index) && flag == false ) {
-//			if((helper[index] != 0) && (helper[sum - index] != 0) ||
-//					helper[index] > 1 || helper[sum - index] > 1) {
-//				index++;
-//				flag = true;
-//			}
-//		}
-//		return flag;
-	
- 		int helperSize = sum < 0 ? Short.MAX_VALUE + 1 : sum + 1;
+  		int helperSize = sum < 0 ? Short.MAX_VALUE + 1 : sum + 1;
 		boolean[] helper = new boolean[helperSize];
 		boolean res = false;
 		int index = 0;
@@ -119,56 +102,23 @@ public class InitialAlgorithms {
 	}
 	
 	public static <T> int binarySearchUpdated(T [] array, T key, Comparator<T> comp) {
-		int leftIndex = 0;
-		int rightIndex = array.length - 1;
-		//int middleIndex = rightIndex / 2;
-		//int compRes = 0;
-//		int ret = 0;
-//		while(leftIndex <= rightIndex && 
-//				(compRes = comp.compare(key, array[middleIndex])) != 0) {
-//			if (compRes > 0) {
-//				
-//				leftIndex = middleIndex + 1;
-//			} else {
-//				
-//				rightIndex = middleIndex - 1; 
-//			}
-//			middleIndex = (leftIndex + rightIndex) / 2; 
-//							
-//		}
-//		System.out.println("1.middleIndex = " + middleIndex);
-//		while((array[middleIndex] == array[middleIndex - 1]) && (middleIndex > 0)) {
-//			middleIndex--;
-//			System.out.println("2. middleIndex = " + middleIndex);
-//		}
-//		
-//		System.out.println("middleIndex = " + middleIndex);
-//		
-//		ret = comp.compare(key, array[0]) < 0 ? -(middleIndex) :
-//				-(middleIndex + 2);
-//		System.out.println("ret = " + ret);
-//		return leftIndex > rightIndex ? ret : middleIndex;
-		
-		while (leftIndex <= rightIndex ) {
-			int middleIndex = leftIndex + rightIndex / 2;
-			if(comp.compare(key, array[middleIndex]) == 0 && 
-					comp.compare(array[middleIndex], array[middleIndex + 1]) < 0) {
-				return (array.length - 1) - leftIndex;
+		int left = 0;
+		int right = array.length - 1;
+		int middle = right / 2;
+		while(right >= left && comp.compare(key, array[left]) != 0) {
+			if(comp.compare(key, array[middle]) <= 0) {
+				right = middle - 1; 
 			}
-			else if (comp.compare(key, array[middleIndex]) >= 0 && 
-					comp.compare(array[middleIndex], array[middleIndex + 1]) == 0) {
-				leftIndex = middleIndex + 1;
+			else {
+				left = middle + 1;
 			}
-			else if (comp.compare(key, array[middleIndex]) > 0) {
-				leftIndex = middleIndex + 1;
-			}
-			else if(comp.compare(key, array[middleIndex]) < 0) {
-				rightIndex = middleIndex - 1;
-			}
+			middle = (left + right) / 2;
 		}
-		return -1; 
+
+			return left < array.length && comp.compare(key, array[left]) == 0 ? 
+					left : -(left + 1); 
 	}
-	
+		
 }
 		
    

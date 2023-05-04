@@ -3,7 +3,6 @@ package telran.algorithm.test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Comparator;
-import java.util.function.BooleanSupplier;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -87,28 +86,21 @@ class AlgorithmTests {
 		assertEquals(1, binarySearch(arr,  0, Comparator.naturalOrder()));
 		assertEquals(3, binarySearch(arr, 17, Comparator.naturalOrder()));
 		assertEquals(1, binarySearch(arr, 0, Comparator.naturalOrder()));
-		assertEquals(-1, binarySearch(arr, -300, Comparator.naturalOrder()));
+		assertEquals(-1, binarySearch(arr, -300, ((a, b) -> a - b)));
 	}
 	
-	@Test
+	@Test	
 		void binarySearchUpdatedTest() {
-		Integer [] arr2 = {-4, -1, 1, 3, 5};
-		assertEquals(2, binarySearchUpdated(arr2, 1, Comparator.naturalOrder()));
-		//assertEquals(4, binarySearchUpdated(arr2, 5, Comparator.naturalOrder()));
-//		assertEquals(-1, binarySearchUpdated(arr2, 0, Comparator.naturalOrder()));
-//		//assertEquals(-1, binarySearchUpdated(arr2, -5, Comparator.naturalOrder()));
-//		assertEquals(-5, binarySearchUpdated(arr2, 4, Comparator.naturalOrder()));
-//		assertEquals(-6, binarySearchUpdated(arr2, 6, Comparator.naturalOrder()));
-//		Integer [] arr3 = {-4, 1, 1, 1, 1, 2, 3, 4, 5, 5, 5, 5, 6};
-//		assertEquals(8, binarySearchUpdated(arr3, 5, Comparator.naturalOrder()));
-//		Integer [] arr4 = {1, 3, 3, 3, 5};
-//		assertEquals(1, binarySearchUpdated(arr4, 3, Comparator.naturalOrder()));
-//		Integer [] arr5 = {2, 2,2,2,5,5,5,5,5,7,8,9, 10, 11, 12, 13,13, 15};
-//		assertEquals(0, binarySearchUpdated(arr5, 2, Comparator.naturalOrder()));
+		Integer[] array = {1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 20, 40};
+		assertEquals(-14, binarySearchUpdated(array, 3, Integer::compare));
+		assertEquals(3, binarySearchUpdated(array, 2, (a, b) -> Integer.compare(a,b)));
+		assertEquals(-1, binarySearchUpdated(array, 0, Integer::compare));
+		assertEquals(13, binarySearchUpdated(array, 4, Integer::compare));
+		assertEquals(0, binarySearchUpdated(array, 1, Integer::compare));
+		assertEquals(-16, binarySearchUpdated(array, 25, Integer::compare));
+		assertEquals(-17, binarySearchUpdated(array, 45, Integer::compare));
 	}
 	
-		
-
 	private Long getMaxValueComplexityN() {
 		long res = 1;
 		while (res > 0) {
