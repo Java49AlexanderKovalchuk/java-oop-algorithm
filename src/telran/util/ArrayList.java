@@ -1,5 +1,6 @@
 package telran.util;
 
+import java.lang.reflect.InaccessibleObjectException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.function.Predicate;
@@ -37,6 +38,9 @@ public class ArrayList<T> implements List<T> {
 		if(size == array.length) {
 			reallocate();
 		}
+		if(index < 0 || index > size) {
+			throw new IndexOutOfBoundsException(index);
+		}
 		System.arraycopy(array, index, array, index + 1, size - index);
 		array[index] = obj;
 		size++;
@@ -45,6 +49,9 @@ public class ArrayList<T> implements List<T> {
 
 	@Override
 	public T remove(int index) {
+		if(index < 0 || index >= size ) {
+			throw new IndexOutOfBoundsException(index);
+		}
 		T res = array[index];
 		
 		System.arraycopy(array, index + 1, array, index, size - index - 1);
@@ -53,7 +60,10 @@ public class ArrayList<T> implements List<T> {
 	} 
 
 	@Override
-	public T get(int index) {
+	public T get(int index) { 
+		if(index < 0 || index >= size) {
+			throw new IndexOutOfBoundsException(index);
+		}
 		T res = array[index];		
 		return res;
 
@@ -175,28 +185,6 @@ public class ArrayList<T> implements List<T> {
 	
 	@Override
 	public boolean removeIf(Predicate<T> predicate) {
-//		boolean res = false;
-//		for(int i = 0; i < size; i++) {
-//			for(int j = i; j < size; j++) {
-//				if(predicate.test(array[j])) {
-//					remove(j);
-//					res = true;
-//				}
-//				
-//			}
-//		}
-//		return res;	
-		
-//		int currentSize = size;
-//		int index = 0;
-//		for(int i = 0; i < currentSize; i++) {
-//			if(!predicate.test(array[i])) {
-//				array[index++] = array[i];
-//			}
-//		}
-//		size = index;
-//		return currentSize != size;
-		
 		int oldSize = size;
 //		int i = 0;
 //		while(i < size) {

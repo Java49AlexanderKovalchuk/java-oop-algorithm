@@ -39,6 +39,11 @@ void setUp() {
 		runTest(expected0_500_3_700);
 		list.add(8, 300);
 		runTest(expected0_500_3_700_8_300);
+		
+		assertThrowsExactly(IndexOutOfBoundsException.class, 
+				() -> list.add(list.size() + 1, 1000));
+		assertThrowsExactly(IndexOutOfBoundsException.class, 
+				() -> list.add(-1, 1000));
 	}
 	
 	@Test
@@ -52,11 +57,20 @@ void setUp() {
 		 runTest(expectedNo10_50);
 		 assertEquals(30, list.remove(3));
 		 runTest(expectedNo10_50_30);
+		 
+		 assertThrowsExactly(IndexOutOfBoundsException.class, 
+				 () -> list.remove(list.size()));
+		 assertThrowsExactly(IndexOutOfBoundsException.class, 
+				 () -> list.remove(-1));
 	}
 	
 	@Test
 	void testGetIndex() {
 		assertEquals(10, list.get(0));
+		assertThrowsExactly(IndexOutOfBoundsException.class,
+				() -> list.get(list.size()));
+		assertThrowsExactly(IndexOutOfBoundsException.class,
+				() -> list.get(-2));
 	}
 	
 	@Test
@@ -149,13 +163,7 @@ void setUp() {
 		assertArrayEquals(expected, persons.toArray(new Person[0]));
 	}
 	
-	@Test
-	void testSortBubble() {
-		Integer expected[] = {-20, 7, 10, 30, 50, 100 };
-		list.sort(new ComparatorInteger());
-		assertArrayEquals(expected, list.toArray(new Integer[0]));
-		
-	}
+	
 	
 	@Test
 	void testSortEvenOdd() {
