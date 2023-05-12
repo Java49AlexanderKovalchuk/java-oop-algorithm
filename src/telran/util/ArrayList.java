@@ -35,11 +35,11 @@ public class ArrayList<T> implements List<T> {
 		
 	@Override
 	public void add(int index, T obj) {
-		if(size == array.length) {
-			reallocate();
-		}
 		if(index < 0 || index > size) {
 			throw new IndexOutOfBoundsException(index);
+		}
+		if(size == array.length) {
+			reallocate();
 		}
 		System.arraycopy(array, index, array, index + 1, size - index);
 		array[index] = obj;
