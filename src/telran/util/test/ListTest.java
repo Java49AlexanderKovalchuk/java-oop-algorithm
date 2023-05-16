@@ -9,11 +9,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import telran.util.*;
-
+ 
 
 abstract class ListTest extends CollectionTest {
 
-private static final int BIG_LENGTH = 100000;
+//private static final int BIG_LENGTH = 100000;
 List<Integer> list = getList();
 @Override
 protected Collection<Integer> getCollection() {
@@ -22,11 +22,7 @@ protected Collection<Integer> getCollection() {
 
 	abstract protected <T> List<T> getList();
 	
-	@Test
-	void testAdd() {
-		assertTrue(list.add(numbers[0]));
-		assertEquals(numbers.length + 1, list.size());
-	}
+	//testAdd() is passed;
 	
 	@Test
 	void testAddIndex() {
@@ -89,42 +85,11 @@ protected Collection<Integer> getCollection() {
 		assertEquals(6, list.lastIndexOf(30));
 	}
 	
-	@Test
-	void testRemove() {           //{10, -20, 7, 50, 100, 30};
-		Integer obj1 = 10;
-		Integer obj2 = 50;
-		Integer obj3 = 30;
-		Integer obj4 = 700;
-		Integer[] expectedNo10_50_30 = {-20, 7, 100};
-		assertTrue(list.remove(obj1));
-		assertTrue(list.remove(obj2));
-		assertTrue(list.remove(obj3));
-		assertFalse(list.remove(obj4));
-		assertEquals(3, list.size()); 
-		runTest(expectedNo10_50_30);
-		
-	}
+	//testRemove() is passed
 	
-	@Test
-	void testToArrayForBigArray() {
-		Integer bigArray[] = new Integer[BIG_LENGTH];
-		for(int i = 0; i < BIG_LENGTH; i++) {
-			bigArray[i] = 10;
-		}
-		Integer actualArray[] = list.toArray(bigArray);
-		int size = list.size();
-		for(int i = 0; i < size; i++) {
-			assertEquals(numbers[i], actualArray[i]);
-		}
-		assertNull(actualArray[size]);
-		assertTrue(bigArray == actualArray);
-	}
-	 
-	@Test
-	void testToArrayForEmptyArray() {
-		Integer actualArray[] = list.toArray(new Integer[0]);
-		assertArrayEquals(numbers, actualArray);
-	}
+	//testToArrayForBigArray() is passed
+
+	//testToArrayForEmptyArray() is passed
 	
 	@Test
 	void testSort() {
@@ -204,36 +169,9 @@ protected Collection<Integer> getCollection() {
 		assertEquals(list.size() - 1, list.lastIndexOf(a -> a == -20));
 	}
 	
-	
-	@Test
-	void testRemoveIfAll() {     //{10, -20, 7, 50, 100, 30};
-		list.removeIf(a -> a == 101);
-		Integer[] expected = {10, -20, 7, 50, 100, 30};
-		assertArrayEquals(expected, list.toArray(new Integer[0]));
-		assertFalse(list.removeIf(a -> a == 1000));
-		list.removeIf(a -> a == 10);
-		Integer[] expected_No10 = { -20, 7, 50, 100, 30};
-		assertArrayEquals(expected_No10, list.toArray(new Integer[0]));
-		
-		list.removeIf(a -> a > 40);
-		Integer[]expectedNo10_No50_No100 = {-20, 7, 30};
-		assertArrayEquals(expectedNo10_No50_No100, list.toArray(new Integer[0]));
-		assertEquals(3, list.size());
-		list.removeIf(a -> ((int)a & 1) == 0 );
-		Integer[]expectedOnlyOdd = {7};
-		assertArrayEquals(expectedOnlyOdd, list.toArray(new Integer[0]));
-		
-		assertTrue(list.removeIf(a -> true));
-		assertEquals(0, list.size());
-		
-	}
-	@Test
-	void testRemoveIfPredicate() {
-		Integer[] expected = {10, -20, 50, 100, 30};
-		assertFalse(list.removeIf(a -> a % 2 != 0 && a >= 10));
-		assertTrue(list.removeIf(a -> a % 2 != 0));
-		runTest(expected);
-	}
+	// testRemoveIfAll() is passed
+
+	//test RemoveIfPredicate is passed
 	
 	static private int evenOddCompare(Integer a, Integer b) {
 		int res = Math.abs(a % 2) - Math.abs(b % 2);
@@ -243,13 +181,15 @@ protected Collection<Integer> getCollection() {
 		return res; 
 	}
 	
-	private void runTest(Integer[] expected) {
-		int size = list.size();
-			Integer[] actual = new Integer[expected.length];
-		for(int i = 0; i < size; i++) {
-			actual[i] = list.get(i); 
-		}
-		assertArrayEquals(expected, actual);
-	}
+	// the method runTest is passed with changes: instead get(i) we are using toArray(ar)
+
+//  	private void runTest(Integer[] expected) {
+//		int size = list.size();
+//			Integer[] actual = new Integer[expected.length];
+//		for(int i = 0; i < size; i++) {
+//			actual[i] = list.get(i); 
+//		}
+//		assertArrayEquals(expected, actual);
+//	}
 	
 }

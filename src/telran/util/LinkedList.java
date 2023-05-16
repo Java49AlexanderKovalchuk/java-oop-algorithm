@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 public class LinkedList<T> implements List<T> {
 	Node<T> head;
 	Node<T> tail;
-	int size;
+	int size; 
 
 	private static class Node<T> {
 		T obj;

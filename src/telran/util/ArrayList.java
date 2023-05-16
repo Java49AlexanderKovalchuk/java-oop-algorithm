@@ -75,7 +75,7 @@ public class ArrayList<T> implements List<T> {
 		
 		return size ;
 	}
-	
+	 
 	@Override
 	public boolean remove(T pattern) {
 				
