@@ -99,7 +99,7 @@ protected Collection<Integer> getCollection() {
 		assertArrayEquals(expected, list.toArray(new Integer[0]));
 	}
 	
-	
+	 
 	@Test
 	void testSortPersons() {
 		List<Person> persons = getList();

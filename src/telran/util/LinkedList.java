@@ -2,6 +2,8 @@ package telran.util;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
 public class LinkedList<T> implements List<T> {
@@ -9,6 +11,26 @@ public class LinkedList<T> implements List<T> {
 	Node<T> tail;
 	int size; 
 
+	private class LinkedListIterator implements Iterator<T> {
+		
+		Node<T> current = head; 
+		
+		@Override
+		public boolean hasNext() {
+			return current != null;
+		}
+
+		@Override
+		public T next() {
+			if(!hasNext()) {
+				throw new NoSuchElementException();
+			}
+			T res = current.obj;
+			current = current.next;
+			return res;		
+		}
+	}
+	
 	private static class Node<T> {
 		T obj;
 		Node<T> next;
@@ -31,34 +53,8 @@ public class LinkedList<T> implements List<T> {
 		return size;
 	}
 
-	@Override
-	public boolean remove(T pattern) {
-		boolean res = false;
-		int index = indexOf(pattern);
-		if (index > -1) {
-			res = true;
-			remove(index);
-		}
-		return res;
-	}
-
-	@Override
-	public T[] toArray(T[] ar) {
-		if (ar.length < size) {
-			ar = Arrays.copyOf(ar, size);
-		}
-		Node<T> current = head;
-		int index = 0;
-		while (current != null) {
-			ar[index++] = current.obj;
-			current = current.next;
-		}
-		if (ar.length > size) {
-			ar[size] = null;
-		}
-		return ar;
-	}
-
+	
+	
 	@Override
 	public void add(int index, T obj) {
 		if (index < 0 || index > size) {
@@ -91,30 +87,8 @@ public class LinkedList<T> implements List<T> {
 	}
 
 	@Override
-	public int indexOf(T pattern) {
-		return indexOf(obj -> isEqual(obj, pattern));
-	}
-
-	@Override
-	public int lastIndexOf(T pattern) {
-		return lastIndexOf(obj -> isEqual(obj, pattern));
-	}
-
-	@Override
-	public void sort() {
-		//TODO
-		sort((Comparator<T>)Comparator.naturalOrder());
-
-	}
-
-	@Override
 	public void sort(Comparator<T> comp) {
-		//TODO
-		//1. call the method toArray
-		//2. By applying Arrays.sort you sort the array from #1
-		//3. Passing over all LinkedList nodes and setting references to objects (T)
-		// in the appropriate order from #2
-		
+				
 		T[] ar = toArray((T[]) new Object[0]);
 		Arrays.sort(ar, comp);
 		Node<T> current = head;
@@ -198,7 +172,7 @@ public class LinkedList<T> implements List<T> {
 		nodeBefore.next = node;
 		nodeA.prev = node;
 
-	}
+	} 
 
 	private Node<T> getNode(int index) {
 
@@ -228,7 +202,6 @@ public class LinkedList<T> implements List<T> {
 		}
 		head.next = null;
 		head = newHead;
-
 	}
 
 	private void removeTail() {
@@ -259,9 +232,9 @@ public class LinkedList<T> implements List<T> {
 		size--;
 	}
 
-	private boolean isEqual(T object, T pattern) {
-
-		return pattern == null  ? object == pattern : pattern.equals(object);
+	@Override
+	public Iterator<T> iterator() {
+		return new LinkedListIterator();
 	}
 
 }

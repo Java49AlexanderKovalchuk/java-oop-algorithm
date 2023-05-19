@@ -4,7 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import telran.util.Collection;
 
 public abstract class CollectionTest {
-//TODO move tests of interface Collection methods (5 methods) from ListTest to here
+
 	protected Integer[] numbers = {10, -20, 7, 50, 100, 30};
 	protected Collection<Integer> collection; 
 	
@@ -70,6 +74,18 @@ public abstract class CollectionTest {
 		assertArrayEquals(numbers, actualArray);
 	}
 	
+	@Test								
+	void iteratorTest() {
+		Iterator <Integer> itr = collection.iterator();
+		//in the loop next() moving to the limit of expected exception
+		for(int i = 0; i < collection.size(); i++) {
+			itr.next();
+		}
+		assertThrowsExactly(NoSuchElementException.class, 
+				() -> itr.next());
+		
+	}
+	
 	@Test
 	void testRemoveIfAll() {     //{10, -20, 7, 50, 100, 30};
 		collection.removeIf(a -> a == 101);
@@ -92,7 +108,7 @@ public abstract class CollectionTest {
 		assertEquals(0, collection.size());
 		
 	}
-	
+	 
 	@Test
 	void testRemoveIfPredicate() {
 		Integer[] expected = {10, -20, 50, 100, 30};
@@ -101,11 +117,8 @@ public abstract class CollectionTest {
 		runTest(expected);
 	}
 	
-	//instead method get(i) we are using here the public method toArray(array) 
 	protected void runTest(Integer[] expected) {
-		//int size = collection.size();
-		Integer[] actual = new Integer[expected.length];
-		actual = collection.toArray(new Integer[0]);
+		Integer[]actual = collection.toArray(new Integer[0]);
 		assertArrayEquals(expected, actual);
 	}
 }

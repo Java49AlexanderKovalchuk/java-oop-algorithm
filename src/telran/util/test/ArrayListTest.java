@@ -3,7 +3,7 @@ package telran.util.test;
 
 
 import telran.util.*;
-
+  
 
 class ArrayListTest extends ListTest {
 

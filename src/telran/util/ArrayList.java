@@ -1,8 +1,10 @@
 package telran.util;
 
-import java.lang.reflect.InaccessibleObjectException;
+
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
 
@@ -10,6 +12,23 @@ public class ArrayList<T> implements List<T> {
 	private static final int DEFAULT_CAPACITY = 16; 
 	private T[] array;
 	private int size;
+
+	private class ArrayListIterator implements Iterator<T> {
+		int index = 0;
+		@Override
+		public boolean hasNext() {
+			return index < size;
+		}
+		
+		@Override
+		public T next() {
+			if(!hasNext()) {
+				throw new NoSuchElementException();
+			}
+			return array [index++];
+		}
+		
+	}
 	@SuppressWarnings("unchecked")
 	public ArrayList(int capacity) {
 		array = (T[]) new Object[capacity];   
@@ -32,7 +51,6 @@ public class ArrayList<T> implements List<T> {
 		 array = Arrays.copyOf(array, array.length * 2);		
 	}
 	
-		
 	@Override
 	public void add(int index, T obj) {
 		if(index < 0 || index > size) {
@@ -46,14 +64,12 @@ public class ArrayList<T> implements List<T> {
 		size++;
 	}
 	
-
 	@Override
 	public T remove(int index) {
 		if(index < 0 || index >= size ) {
 			throw new IndexOutOfBoundsException(index);
 		}
 		T res = array[index];
-		
 		System.arraycopy(array, index + 1, array, index, size - index - 1);
 		size--;
 		array[size] = null;
@@ -69,56 +85,12 @@ public class ArrayList<T> implements List<T> {
 		return res;
 
 	}
-		
+		 
 	@Override
 	public int size() {
-		
 		return size ;
 	}
 	 
-	@Override
-	public boolean remove(T pattern) {
-				
-		boolean res = true;
-		int index = indexOf(pattern);
-		if(index < 0) {
-			res = false;
-		}
-		else remove(index);
-		return res;
-	}
-	
-	@Override
-	public T[] toArray(T[] ar) {
-		if(ar.length < size) {
-		ar = Arrays.copyOf(ar, size); 
-		}
-		System.arraycopy(array, 0, ar, 0, size);
-		if(ar.length > size) {
-			ar[size] = null;
-		}
-		return ar;
-	}
-	
-	@Override
-	public int indexOf(T pattern) {
-		 return indexOf(obj -> isEqual(obj, pattern));
-	}
-	
-	private boolean isEqual(T object, T pattern) { 		
-		return pattern == null ? object == pattern : pattern.equals(object);
-	}
-	
-	@Override
-	public int lastIndexOf(T pattern) {
-		return lastIndexOf(obj -> isEqual(obj, pattern));
-	}
-	
-	@Override
-	public void sort() {
-		Arrays.sort(array, 0, size);	
-		//sort((Comparator<T>) Comparator.naturalOrder());
-	}
 	@Override
 	public void sort(Comparator<T> comp) {
 		//Arrays.sort(array, 0, size, comp); 
@@ -172,21 +144,16 @@ public class ArrayList<T> implements List<T> {
 	@Override
 	public boolean removeIf(Predicate<T> predicate) {
 		int oldSize = size;
-//		int i = 0;
-//		while(i < size) {
-//			if(predicate.test(array[i])) {
-//				remove(i);
-//			} else {
-//				i++;
-//			}
-//		}
-		
 		for(int i = size - 1; i >= 0; i--) {
 			if(predicate.test(array[i])) {
 				remove(i);
-				
 			}
 		}
 		return oldSize > size;
 	}
+	@Override
+	public Iterator<T> iterator() {
+		return new ArrayListIterator();
+	}
+	
 }
