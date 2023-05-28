@@ -169,9 +169,15 @@ protected Collection<Integer> getCollection() {
 		assertEquals(list.size() - 1, list.lastIndexOf(a -> a == -20));
 	}
 	
-	// testRemoveIfAll() is passed
-
-	//test RemoveIfPredicate is passed
+	@Test
+	void clearPerformance() {
+		List<Integer> bigList = getList(); 
+		for(int i = 0; i < 1_000_000; i++) {
+			bigList.add(i);
+		}
+		bigList.clear();
+	}
+	
 	
 	static private int evenOddCompare(Integer a, Integer b) {
 		int res = Math.abs(a % 2) - Math.abs(b % 2);
@@ -181,15 +187,6 @@ protected Collection<Integer> getCollection() {
 		return res; 
 	}
 	
-	// the method runTest is passed with changes: instead get(i) we are using toArray(ar)
-
-//  	private void runTest(Integer[] expected) {
-//		int size = list.size();
-//			Integer[] actual = new Integer[expected.length];
-//		for(int i = 0; i < size; i++) {
-//			actual[i] = list.get(i); 
-//		}
-//		assertArrayEquals(expected, actual);
-//	}
+	
 	
 }

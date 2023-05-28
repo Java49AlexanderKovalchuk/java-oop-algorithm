@@ -32,4 +32,26 @@ Range range = new Range(10, 14);
 				() -> it2.next());
 		
 	}
+	@Test
+	void iteratorRemove() {
+		Iterator<Integer> it1 = range.iterator();
+		Integer[] expectedFirst = { 11, 12, 13};
+		Integer[] expectedLast = {11, 12};
+		assertThrows(IllegalStateException.class, () -> it1.remove());
+		it1.next();
+		it1.remove();
+		assertArrayEquals(expectedFirst, range.toArray());
+		assertThrows(IllegalStateException.class, () -> it1.remove());
+		while(it1.hasNext()) {
+			it1.next();
+		}
+		it1.remove();
+		assertArrayEquals(expectedLast, range.toArray());
+	}
+	@Test
+	void removeIfTest() {
+		Range range1 = new Range(1, 4);
+		range1.removeIf(num -> num % 2 != 0);
+		assertArrayEquals(new Integer[] {2}, range1.toArray()); 
+	}
 }

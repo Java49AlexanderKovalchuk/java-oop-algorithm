@@ -20,7 +20,7 @@ public abstract class CollectionTest {
 	protected Integer[] numbers = {10, -20, 7, 50, 100, 30};
 	protected Collection<Integer> collection; 
 	
-	private static final int BIG_LENGTH = 100000;
+	protected static final int BIG_LENGTH = 100000;
 	
 	@BeforeEach
 	void setUp() {
@@ -38,18 +38,19 @@ public abstract class CollectionTest {
 	}
 	
 	@Test
-	void testRemove() {           //{10, -20, 7, 50, 100, 30};
-		Integer obj1 = 10;
-		Integer obj2 = 50;
-		Integer obj3 = 30;
-		Integer obj4 = 700;
+	void testRemovePattern() {           //{10, -20, 7, 50, 100, 30};
+		Integer[] expectedNo10 = {-20, 7, 50, 100, 30};
+		Integer[] expectedNo10_50 = {-20, 7, 100, 30};
 		Integer[] expectedNo10_50_30 = {-20, 7, 100};
-		assertTrue(collection.remove(obj1));
-		assertTrue(collection.remove(obj2));
-		assertTrue(collection.remove(obj3));
-		assertFalse(collection.remove(obj4));
-		assertEquals(3, collection.size()); 
+		assertTrue(collection.remove(numbers[0]));
+		runTest(expectedNo10);
+		Integer ObjToRemove = 50;
+		assertTrue(collection.remove(ObjToRemove));
+		runTest(expectedNo10_50);
+		assertTrue(collection.remove((Integer)30));
 		runTest(expectedNo10_50_30);
+		assertFalse(collection.remove((Integer)50));
+		
 		
 	}
 	
@@ -74,18 +75,39 @@ public abstract class CollectionTest {
 		assertArrayEquals(numbers, actualArray);
 	}
 	
-	@Test								
-	void iteratorTest() {
-		Iterator <Integer> itr = collection.iterator();
-		//in the loop next() moving to the limit of expected exception
-		for(int i = 0; i < collection.size(); i++) {
-			itr.next();
-		}
-		assertThrowsExactly(NoSuchElementException.class, 
-				() -> itr.next());
+	
+	@Test
+	void testIterator() {
 		
+		Iterator<Integer> it1 = collection.iterator();
+		Iterator<Integer> it2 = collection.iterator();
+		it1.next();
+		while(it2.hasNext()) {
+			it2.next();
+		}
+		assertEquals(numbers[1], it1.next());
+		assertThrowsExactly(NoSuchElementException.class, 
+				() -> it2.next());
 	}
 	
+	@Test
+	void testIteratorRemove() {
+		Iterator<Integer> it = collection.iterator();
+		Integer[] expectedFirst = {-20, 7, 50, 100, 30};
+		Integer[] expectedLast = {-20, 7, 50, 100};
+
+		assertThrowsExactly(IllegalStateException.class, () -> it.remove());
+		it.next();
+		it.remove();
+		runTest(expectedFirst);
+		assertThrowsExactly(IllegalStateException.class, () -> it.remove());
+		while(it.hasNext()) {
+			it.next();
+		}
+		it.remove();
+		runTest(expectedLast);
+		
+	}
 	@Test
 	void testRemoveIfAll() {     //{10, -20, 7, 50, 100, 30};
 		collection.removeIf(a -> a == 101);
@@ -117,8 +139,21 @@ public abstract class CollectionTest {
 		runTest(expected);
 	}
 	
+	@Test
+	void testContains() {
+		assertTrue(collection.contains(numbers[0]));
+		assertTrue(collection.contains(numbers[3]));
+		assertTrue(collection.contains(numbers[numbers.length - 1]));
+		assertFalse(collection.contains(1000000));
+	}
+	@Test
+	void clearFunctional() {
+		collection.clear();
+		assertEquals(0, collection.size());
+	}
 	protected void runTest(Integer[] expected) {
 		Integer[]actual = collection.toArray(new Integer[0]);
 		assertArrayEquals(expected, actual);
 	}
+	
 }

@@ -12,22 +12,31 @@ public class LinkedList<T> implements List<T> {
 	int size; 
 
 	private class LinkedListIterator implements Iterator<T> {
-		
 		Node<T> current = head; 
-		
+		boolean flNext = false;
 		@Override
 		public boolean hasNext() {
 			return current != null;
 		}
-
-		@Override
+ 		@Override
 		public T next() {
 			if(!hasNext()) {
 				throw new NoSuchElementException();
 			}
 			T res = current.obj;
 			current = current.next;
+			flNext = true;
 			return res;		
+		}
+		@Override
+		public void remove() {
+			if(!flNext) {
+				throw new IllegalStateException();
+			}
+			Node<T> removeNode = current != null ? current.prev : tail;
+			removeNode(removeNode);
+			
+			flNext = false;
 		}
 	}
 	
@@ -121,21 +130,7 @@ public class LinkedList<T> implements List<T> {
 		return current == null ? -1 : index;
 	}
 
-	@Override
-	public boolean removeIf(Predicate<T> predicate) {
-		Node<T> current = head;
-		Node<T> next = null;
-		int oldSize = size;
-		while (current != null) {
-			next = current.next;
-			if (predicate.test(current.obj)) {
-				removeNode(current);
-			}
-			current = next;
-
-		}
-		return oldSize > size;
-	}
+	
 
 	private void addNode(int index, Node<T> node) {
 		if (head == null) {
