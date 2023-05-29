@@ -10,19 +10,33 @@ public class HashSet<T> implements Set<T> {
 	private int size;
 	
 	private class HashSetIterator implements Iterator<T> {
-		Iterator<T> curItrList;
-		Iterator<T> prevItrList;
-		int hashTableIndex = 0;
+		Integer currentIteratorIndex;
+		Iterator<T> currentIterator;
+		Iterator<T> prevIterator;
 		boolean flNext = false;
-		
 		HashSetIterator() {
-			upDateCurItrList();
+			initialState();
 		}
 		
+		private void initialState() {
+			currentIteratorIndex = getCurrentIteratorIndex(-1);
+			if(currentIteratorIndex > -1) {
+				currentIterator = hashTable[currentIteratorIndex].iterator();
+			}
+		}
+
+		private Integer getCurrentIteratorIndex(int currentIndex) {
+			currentIndex++;
+			while(currentIndex < hashTable.length &&
+					(hashTable[currentIndex] == null || hashTable[currentIndex].size() == 0)) {
+				currentIndex++;
+			}
+			return currentIndex < hashTable.length ? currentIndex : -1; 
+		}
+ 
 		@Override
 		public boolean hasNext() {
-			return curItrList != null;
-			
+			return currentIteratorIndex > 0;
 		}
 		
 		@Override
@@ -30,51 +44,33 @@ public class HashSet<T> implements Set<T> {
 			if(!hasNext()) {
 				throw new NoSuchElementException();
 			}
-			T nextElement = curItrList.next();
-			prevItrList = curItrList;
-			upDateCurItrList();
+			T res = currentIterator.next();
+			prevIterator = currentIterator;
+			updateState();
 			flNext = true;
-			return nextElement;
-			
-		}
+			return res;
 		
-		private void upDateCurItrList() {
-			if(curItrList == null || !curItrList.hasNext()) {
-				//current iterator has no show other linked list
-				Iterator<T> it;
-				do {
-					LinkedList<T> list = getList();
-					hashTableIndex++;
-					
-					if(list == null) {
-						curItrList = null;
-						return;
-					}
-					it = list.iterator();
-				} while (!it.hasNext());
-				curItrList = it;
-			}
-			
 		}
-		
-		private LinkedList<T> getList() {
-			while(hashTableIndex < hashTable.length && hashTable[hashTableIndex] != null) {
-				hashTableIndex++;
-			}
+				
+		private void updateState() {
+			if(!currentIterator.hasNext()) {
+				currentIteratorIndex = getCurrentIteratorIndex(currentIteratorIndex);
 			
-			return hashTableIndex < hashTable.length ? hashTable[hashTableIndex] : null;
+				if(currentIteratorIndex >= 0) {
+				currentIterator = hashTable[currentIteratorIndex].iterator();
+				}
+			}
 		}
-					
+
 		@Override
 		public void remove() {
 			if(!flNext) {
 				throw new IllegalStateException();
 			}
-			prevItrList.remove();
+			prevIterator.remove();
 			size--;
 			flNext = false;
-			}
-		
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -147,28 +143,28 @@ public class HashSet<T> implements Set<T> {
 		return hashTable[index] != null && hashTable[index].contains(pattern);
 	}
 	
-	@Override
-	//FIXME method should be remove after writing iterator 
-	public T[] toArray(T[] ar) {
-		
-		int size = size();
-		if(ar.length < size) {
-		ar = Arrays.copyOf(ar, size); 
-		}
-		int index = 0;
-			
-		for(int i = 0; i < hashTable.length; i++) {
-			LinkedList<T> list = hashTable[i];
-			if(list != null) {
-				for(T element: list) {
-				ar[index++] = element;
-				} 
-			}
-		}
-		if(ar.length > size) {
-			ar[size] = null;
-		}
-		return ar;
-	}
+//	@Override
+//	//FIXME method should be remove after writing iterator 
+//	public T[] toArray(T[] ar) {
+//		
+//		int size = size();
+//		if(ar.length < size) {
+//		ar = Arrays.copyOf(ar, size); 
+//		}
+//		int index = 0;
+//			
+//		for(int i = 0; i < hashTable.length; i++) {
+//			LinkedList<T> list = hashTable[i];
+//			if(list != null) {
+//				for(T element: list) {
+//				ar[index++] = element;
+//				} 
+//			}
+//		}
+//		if(ar.length > size) {
+//			ar[size] = null;
+//		}
+//		return ar;
+//	}
 
 }
