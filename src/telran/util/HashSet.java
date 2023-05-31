@@ -8,7 +8,6 @@ public class HashSet<T> implements Set<T> {
 	private static final int DEFAULT_HASH_TABLE_SIZE = 16;
 	private LinkedList<T>[] hashTable;
 	private int size;
-	
 	private class HashSetIterator implements Iterator<T> {
 		Integer currentIteratorIndex;
 		Iterator<T> currentIterator;
@@ -17,28 +16,30 @@ public class HashSet<T> implements Set<T> {
 		HashSetIterator() {
 			initialState();
 		}
-		
 		private void initialState() {
 			currentIteratorIndex = getCurrentIteratorIndex(-1);
 			if(currentIteratorIndex > -1) {
 				currentIterator = hashTable[currentIteratorIndex].iterator();
+				
+				
 			}
+			
+			
 		}
-
-		private Integer getCurrentIteratorIndex(int currentIndex) {
+		private int getCurrentIteratorIndex(int currentIndex) {
 			currentIndex++;
-			while(currentIndex < hashTable.length &&
+			while(currentIndex < hashTable.length && 
 					(hashTable[currentIndex] == null || hashTable[currentIndex].size() == 0)) {
 				currentIndex++;
 			}
-			return currentIndex < hashTable.length ? currentIndex : -1; 
+			return currentIndex < hashTable.length ? currentIndex : -1;
 		}
- 
 		@Override
 		public boolean hasNext() {
-			return currentIteratorIndex > 0;
+			
+			return currentIteratorIndex >= 0;
 		}
-		
+
 		@Override
 		public T next() {
 			if(!hasNext()) {
@@ -49,19 +50,18 @@ public class HashSet<T> implements Set<T> {
 			updateState();
 			flNext = true;
 			return res;
-		
 		}
-				
 		private void updateState() {
 			if(!currentIterator.hasNext()) {
-				currentIteratorIndex = getCurrentIteratorIndex(currentIteratorIndex);
-			
+				currentIteratorIndex =
+						getCurrentIteratorIndex(currentIteratorIndex);
 				if(currentIteratorIndex >= 0) {
-				currentIterator = hashTable[currentIteratorIndex].iterator();
+					currentIterator = hashTable[currentIteratorIndex].iterator();
 				}
 			}
+			
+			
 		}
-
 		@Override
 		public void remove() {
 			if(!flNext) {
@@ -71,18 +71,18 @@ public class HashSet<T> implements Set<T> {
 			size--;
 			flNext = false;
 		}
+		
 	}
-	
 	@SuppressWarnings("unchecked")
 	public HashSet(int hashTableSize) {
-		hashTable = new LinkedList[hashTableSize]; 
+		hashTable = new LinkedList[hashTableSize];
 	}
 	public HashSet() {
-		this(DEFAULT_HASH_TABLE_SIZE); 
+		this(DEFAULT_HASH_TABLE_SIZE);
 	}
-	
 	@Override
 	public Iterator<T> iterator() {
+		
 		return new HashSetIterator();
 	}
 
@@ -101,26 +101,29 @@ public class HashSet<T> implements Set<T> {
 			size++;
 			res = true;
 		}
+		
 		return res;
 	}
 
 	private int getHashTableIndex(T obj) {
+		
 		return Math.abs(obj.hashCode()) % hashTable.length;
 	}
-	
 	private void recreation() {
 		HashSet<T> tmp = new HashSet<>(hashTable.length * 2);
-		for(int i = 0;  i < hashTable.length; i++) {
+		for (int i = 0; i < hashTable.length; i++) {
 			if (hashTable[i] != null) {
-				for(T obj: hashTable[i]) {
+				for (T obj : hashTable[i]) {
 					tmp.add(obj);
-				}
+				} 
 			}
 		}
 		this.hashTable = tmp.hashTable;
+		
 	}
-	@Override	
+	@Override
 	public int size() {
+		
 		return size;
 	}
 
@@ -128,9 +131,9 @@ public class HashSet<T> implements Set<T> {
 	public boolean remove(T pattern) {
 		boolean res = false;
 		int index = getHashTableIndex(pattern);
-		if(hashTable[index] != null) {
+		if (hashTable[index] != null) {
 			res = hashTable[index].remove(pattern);
-			if(res) {
+			if (res) {
 				size--;
 			}
 		}
@@ -143,28 +146,5 @@ public class HashSet<T> implements Set<T> {
 		return hashTable[index] != null && hashTable[index].contains(pattern);
 	}
 	
-//	@Override
-//	//FIXME method should be remove after writing iterator 
-//	public T[] toArray(T[] ar) {
-//		
-//		int size = size();
-//		if(ar.length < size) {
-//		ar = Arrays.copyOf(ar, size); 
-//		}
-//		int index = 0;
-//			
-//		for(int i = 0; i < hashTable.length; i++) {
-//			LinkedList<T> list = hashTable[i];
-//			if(list != null) {
-//				for(T element: list) {
-//				ar[index++] = element;
-//				} 
-//			}
-//		}
-//		if(ar.length > size) {
-//			ar[size] = null;
-//		}
-//		return ar;
-//	}
 
 }

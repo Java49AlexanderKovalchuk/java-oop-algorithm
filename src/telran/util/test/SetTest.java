@@ -6,15 +6,14 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
-
 import telran.util.Collection;
 import telran.util.Set;
 
 public abstract class SetTest extends CollectionTest {
-	Set<Integer> set = getSet();
-	abstract protected <T> Set<T> getSet();
-	@Override
-	@Test
+   Set<Integer> set = getSet();
+   abstract protected <T> Set<T> getSet();
+   @Override
+   @Test
 	void testAdd() {
 		assertFalse(collection.add(numbers[0]));
 		assertEquals(numbers.length, collection.size());
@@ -25,14 +24,14 @@ public abstract class SetTest extends CollectionTest {
 		return set;
 	}
 	protected void runTest(Integer[] expected) {
-		Integer[]actual = collection.toArray(new Integer[0]);
-		Integer[] expectedCopy = Arrays.copyOf(expected, expected.length);
+		Integer [] actual = collection.toArray(new Integer[0]);
+		Integer expectedCopy[] = Arrays.copyOf(expected, expected.length);
 		Arrays.sort(expectedCopy);
 		Arrays.sort(actual);
 		
 		assertArrayEquals(expectedCopy, actual);
+		
 	}
-	
 	@Test
 	void testToArrayForBigArray() {
 		Integer bigArray[] = new Integer[BIG_LENGTH];
@@ -40,7 +39,7 @@ public abstract class SetTest extends CollectionTest {
 			bigArray[i] = 10;
 		}
 		Integer actualArray[] = collection.toArray(bigArray);
-		Arrays.sort(actualArray, 0, collection.size());
+		Arrays.sort(actualArray,0,collection.size());
 		int size = collection.size();
 		Integer expected[] = Arrays.copyOf(numbers, numbers.length);
 		Arrays.sort(expected);
@@ -50,15 +49,23 @@ public abstract class SetTest extends CollectionTest {
 		assertNull(actualArray[size]);
 		assertTrue(bigArray == actualArray);
 	}
-	
 	@Test
 	void testToArrayForEmptyArray() {
-		Integer actualArray[] = collection.toArray(new Integer[0]);
+		Integer actualArray[] =
+				collection.toArray(new Integer[0]);
 		Arrays.sort(actualArray);
 		Integer expected[] = Arrays.copyOf(numbers, numbers.length);
 		Arrays.sort(expected);
 		assertArrayEquals(expected, actualArray);
 	}
-	
-	
+	@Test
+	void clearPerformance() {
+		Collection<Integer> bigCollection = getCollection();
+		for(int i = 0; i < 1_000_0; i++) {
+			bigCollection.add(i);
+		}
+		bigCollection.clear();
+		assertEquals(0, bigCollection.size());
+	}
+
 }

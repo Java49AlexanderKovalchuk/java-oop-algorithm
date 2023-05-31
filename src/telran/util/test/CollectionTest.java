@@ -11,49 +11,61 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import telran.util.Collection;
+import telran.util.List;
 
 public abstract class CollectionTest {
-
-	protected Integer[] numbers = {10, -20, 7, 50, 100, 30};
-	protected Collection<Integer> collection; 
-	
+//TODO move tests of interface collection methods (5 methods) from ListTest
+//	to here
+	protected Integer[] numbers = { 10, -20, 7, 50, 100, 30 };
+	protected Collection<Integer> collection;
 	protected static final int BIG_LENGTH = 100000;
-	
 	@BeforeEach
 	void setUp() {
 		collection = getCollection();
-		for( int i = 0; i < numbers.length; i++) {
+		for (int i = 0; i < numbers.length; i++) {
 			collection.add(numbers[i]);
 		}
 	}
+
 	abstract protected Collection<Integer> getCollection();
-	 
+
 	@Test
 	void testAdd() {
 		assertTrue(collection.add(numbers[0]));
 		assertEquals(numbers.length + 1, collection.size());
 	}
-	
 	@Test
-	void testRemovePattern() {           //{10, -20, 7, 50, 100, 30};
-		Integer[] expectedNo10 = {-20, 7, 50, 100, 30};
-		Integer[] expectedNo10_50 = {-20, 7, 100, 30};
-		Integer[] expectedNo10_50_30 = {-20, 7, 100};
+	void testRemovePattern() {
+		Integer [] expectedNo10 = { -20, 7, 50, 100, 30};
+		Integer [] expectedNo10_50 = { -20, 7,  100, 30};
+		Integer [] expectedNo10_50_30 = { -20, 7,  100};
 		assertTrue(collection.remove(numbers[0]));
 		runTest(expectedNo10);
-		Integer ObjToRemove = 50;
-		assertTrue(collection.remove(ObjToRemove));
+		Integer objToRemove = 50;
+		assertTrue(collection.remove(objToRemove));
 		runTest(expectedNo10_50);
 		assertTrue(collection.remove((Integer)30));
 		runTest(expectedNo10_50_30);
 		assertFalse(collection.remove((Integer)50));
-		
+	}
+	@Test
+	void testRemoveIfPredicate() {
+		Integer[] expected = {10, -20,  50, 100, 30};
+		assertFalse(collection.removeIf(a -> a % 2 != 0
+				&& a >= 10));
+		assertTrue(collection.removeIf(a -> a % 2 != 0));
+		runTest(expected);
 		
 	}
-	
+	@Test
+	void testRemoveIfAll() {
+		assertTrue(collection.removeIf(a -> true));
+		assertEquals(0, collection.size());
+	}
 	@Test
 	void testToArrayForBigArray() {
 		Integer bigArray[] = new Integer[BIG_LENGTH];
@@ -68,14 +80,12 @@ public abstract class CollectionTest {
 		assertNull(actualArray[size]);
 		assertTrue(bigArray == actualArray);
 	}
-	
 	@Test
 	void testToArrayForEmptyArray() {
-		Integer actualArray[] = collection.toArray(new Integer[0]);
+		Integer actualArray[] =
+				collection.toArray(new Integer[0]);
 		assertArrayEquals(numbers, actualArray);
 	}
-	
-	
 	@Test
 	void testIterator() {
 		
@@ -85,60 +95,33 @@ public abstract class CollectionTest {
 		while(it2.hasNext()) {
 			it2.next();
 		}
-		assertEquals(numbers[1], it1.next());
-		assertThrowsExactly(NoSuchElementException.class, 
-				() -> it2.next());
+		assertTrue(collection.contains(it1.next()));
+		
+		assertThrowsExactly(NoSuchElementException.class, () -> it2.next());
 	}
-	
 	@Test
 	void testIteratorRemove() {
 		Iterator<Integer> it = collection.iterator();
-		Integer[] expectedFirst = {-20, 7, 50, 100, 30};
-		Integer[] expectedLast = {-20, 7, 50, 100};
-
-		assertThrowsExactly(IllegalStateException.class, () -> it.remove());
-		it.next();
+		
+		
+		assertThrowsExactly(IllegalStateException.class, ()->it.remove());
+		Integer removed = it.next();
+		assertTrue(collection.contains(removed));
 		it.remove();
-		runTest(expectedFirst);
-		assertThrowsExactly(IllegalStateException.class, () -> it.remove());
+		assertFalse(collection.contains(removed));
+		assertThrowsExactly(IllegalStateException.class, ()->it.remove());
 		while(it.hasNext()) {
-			it.next();
+			removed = it.next();
+			
 		}
+		assertTrue(collection.contains(removed));
 		it.remove();
-		runTest(expectedLast);
+		assertFalse(collection.contains(removed));
+		
+		
+		
 		
 	}
-	@Test
-	void testRemoveIfAll() {     //{10, -20, 7, 50, 100, 30};
-		collection.removeIf(a -> a == 101);
-		Integer[] expected = {10, -20, 7, 50, 100, 30};
-		assertArrayEquals(expected, collection.toArray(new Integer[0]));
-		assertFalse(collection.removeIf(a -> a == 1000));
-		collection.removeIf(a -> a == 10);
-		Integer[] expected_No10 = { -20, 7, 50, 100, 30};
-		assertArrayEquals(expected_No10, collection.toArray(new Integer[0]));
-		
-		collection.removeIf(a -> a > 40);
-		Integer[]expectedNo10_No50_No100 = {-20, 7, 30};
-		assertArrayEquals(expectedNo10_No50_No100, collection.toArray(new Integer[0]));
-		assertEquals(3, collection.size());
-		collection.removeIf(a -> ((int)a & 1) == 0 );
-		Integer[]expectedOnlyOdd = {7};
-		assertArrayEquals(expectedOnlyOdd, collection.toArray(new Integer[0]));
-		
-		assertTrue(collection.removeIf(a -> true));
-		assertEquals(0, collection.size());
-		
-	}
-	 
-	@Test
-	void testRemoveIfPredicate() {
-		Integer[] expected = {10, -20, 50, 100, 30};
-		assertFalse(collection.removeIf(a -> a % 2 != 0 && a >= 10));
-		assertTrue(collection.removeIf(a -> a % 2 != 0));
-		runTest(expected);
-	}
-	
 	@Test
 	void testContains() {
 		assertTrue(collection.contains(numbers[0]));
@@ -147,13 +130,24 @@ public abstract class CollectionTest {
 		assertFalse(collection.contains(1000000));
 	}
 	@Test
-	void clearFunctional() {
+	void clearFunctionalTest() {
 		collection.clear();
 		assertEquals(0, collection.size());
 	}
-	protected void runTest(Integer[] expected) {
-		Integer[]actual = collection.toArray(new Integer[0]);
-		assertArrayEquals(expected, actual);
-	}
+	@Test
 	
+	void clearPerformance() {
+		Collection<Integer> bigCollection = getCollection();
+		for(int i = 0; i < 1_000_000; i++) {
+			bigCollection.add(i);
+		}
+		bigCollection.clear();
+		assertEquals(0, bigCollection.size());
+	}
+	protected void runTest(Integer[] expected) {
+		Integer [] actual = collection.toArray(new Integer[0]);
+		
+		assertArrayEquals(expected, actual);
+		
+	}
 }

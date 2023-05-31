@@ -7,9 +7,11 @@ import java.util.function.Predicate;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
 
 public interface Collection<T> extends Iterable<T> {
+
 boolean add(T obj);
 int size();
 boolean remove(T pattern);  
+
 default T[] toArray(T[] array) {
 	int size = size();
 	if(array.length < size) {
@@ -20,7 +22,7 @@ default T[] toArray(T[] array) {
 	//	while(itr.hasNext()) {
 	//  array[index++] = itr.next();
 	//	}
-	// other way
+	// other way 
 	for(T element: this) {
 		array[index++] = element;
 	}
@@ -40,10 +42,12 @@ default boolean removeIf(Predicate<T> predicate) {
 	}
 	return oldSize > size();
 }
+
 boolean contains(T pattern); 
+
 default boolean isEqual(T object, T pattern) {
 	return pattern == null  ? object == pattern : pattern.equals(object);
-	}
+}
 default void clear() {
 	removeIf(element -> true);
 }
