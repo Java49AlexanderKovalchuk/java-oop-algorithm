@@ -2,6 +2,7 @@ package telran.util.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Arrays;
 import java.util.Comparator;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -21,9 +22,7 @@ protected Collection<Integer> getCollection() {
 }
 
 	abstract protected <T> List<T> getList();
-	
-	//testAdd() is passed;
-	
+ 	
 	@Test
 	void testAddIndex() {
 		Integer[] expected0_500 = {500, 10, -20, 7, 50, 100, 30};
@@ -187,6 +186,15 @@ protected Collection<Integer> getCollection() {
 		return res; 
 	}
 	
-	
+	@Override
+	protected Integer[] getActual(Integer[] array, int size) {
+		
+		return array;
+	}
+	@Override
+	protected Integer[] getExpected(Integer[] array) {
+		
+		return array; 
+	}
 	
 }

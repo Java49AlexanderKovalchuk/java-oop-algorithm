@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -59,32 +60,36 @@ public abstract class CollectionTest {
 				&& a >= 10));
 		assertTrue(collection.removeIf(a -> a % 2 != 0));
 		runTest(expected);
-		
 	}
 	@Test
 	void testRemoveIfAll() {
 		assertTrue(collection.removeIf(a -> true));
 		assertEquals(0, collection.size());
 	}
+	protected abstract Integer[] getActual(Integer[] actual, int size);
+	protected abstract Integer[] getExpected(Integer[] expected);
 	@Test
 	void testToArrayForBigArray() {
 		Integer bigArray[] = new Integer[BIG_LENGTH];
 		for(int i = 0; i < BIG_LENGTH; i++) {
 			bigArray[i] = 10;
 		}
-		Integer actualArray[] = collection.toArray(bigArray);
+		Integer actualArray[] = getActual(collection.toArray(bigArray), collection.size());
+		Integer expected[] = getExpected(numbers);
+
 		int size = collection.size();
 		for(int i = 0; i < size; i++) {
-			assertEquals(numbers[i], actualArray[i]);
+			assertEquals(expected[i], actualArray[i]);
 		}
 		assertNull(actualArray[size]);
 		assertTrue(bigArray == actualArray);
 	}
 	@Test
 	void testToArrayForEmptyArray() {
-		Integer actualArray[] =
-				collection.toArray(new Integer[0]);
-		assertArrayEquals(numbers, actualArray);
+		
+		Integer actualArray[] = getActual(collection.toArray(new Integer[0]), collection.size());
+		Integer expected[] = getExpected(numbers);
+		assertArrayEquals(expected, actualArray);
 	}
 	@Test
 	void testIterator() {
@@ -138,8 +143,9 @@ public abstract class CollectionTest {
 	
 	void clearPerformance() {
 		Collection<Integer> bigCollection = getCollection();
-		for(int i = 0; i < 1_000_000; i++) {
-			bigCollection.add(i);
+		Random gen = new Random();
+		for(int i = 0; i < 1000000; i++) {
+			bigCollection.add(gen.nextInt());
 		}
 		bigCollection.clear();
 		assertEquals(0, bigCollection.size());

@@ -8,6 +8,6 @@ public class HashSetTest extends SetTest {
 	protected <T> Set<T> getSet() {
 		
 		return new HashSet<>(3);
-	}
+	} 
 
-}
+} 

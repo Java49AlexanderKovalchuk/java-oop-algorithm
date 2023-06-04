@@ -4,7 +4,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class TreeSet<T> implements Set<T> {
+public class TreeSet<T> implements SortedSet<T> {
 	private static class Node<T> { 
 		T obj;
 		Node<T> parent;
@@ -13,6 +13,12 @@ public class TreeSet<T> implements Set<T> {
 		Node(T obj) {
 			this.obj = obj;
 		}
+		void setNulls() {
+			parent = null;
+			left = null;
+			right = null;
+			obj = null;
+		}
 	
 	}
 	
@@ -20,6 +26,7 @@ public class TreeSet<T> implements Set<T> {
 		private Node<T> root;
 		private Comparator<T> comp;
 		private int size;
+		
 		public TreeSet(Comparator<T> comp) {
 			this.comp = comp;
 		}
@@ -76,7 +83,7 @@ public class TreeSet<T> implements Set<T> {
 				} else {
 					parent.left = node;
 				}
-			}
+			}  
 		}
 		if(res) {
 			size++;
@@ -138,122 +145,97 @@ public class TreeSet<T> implements Set<T> {
 	}
 
 	@Override
-	public boolean remove(T pattern) {
+	public boolean remove(T pattern) {  
 		boolean res = false;
 		Node<T> node = getNode(pattern);
 		if(node != null) {
 			removeNode(node);
+			res = true;
 		}
-		return false;
+		return res;
 	}
 	
-	private void removeNode(Node<T> removeNode) {
-		if(isJunction(removeNode)) {
-			removeJunction(removeNode);
-		} else if (removeNode == root) {
-			removeLeafRoot();
+	private void removeNode(Node<T> node) {
+		if(node.left != null && node.right != null) {
+			removeJunction(node);
 		} else {
-			removeNonJunction(removeNode);
+			removeNonJunction(node);
 		}
 		size--;
 	}
-
-	private void removeNonJunction(Node<T> removeNode) {
-		Node<T> child = removeNode.left == null ? removeNode.right : removeNode.left;
-		Node<T> parent = removeNode.parent;
-		if(parent.right == removeNode) {
-			parent.right = child;
-		} else {
-			parent.left = child;
-		}
-		if(child != null) {
-			child.parent = parent;
-		}
-	}
-	private void removeLeafRoot() {
-		root = root.left == null ? root.right : root.left;
-		if(root != null) {
-			root.parent = null; 
-		} 
-	}
-	private void removeJunction(Node<T> removeNode) {
-		Node<T> nodeSubstitute = getMostFromLeft(removeNode.right);	
-		removeNode.obj = nodeSubstitute.obj;
-		removeNonJunction(nodeSubstitute);
+		
+	private void removeJunction(Node<T> node) {
+		Node<T> substitute = getMostNodeFrom(node.left);
+		node.obj = substitute.obj;
+		removeNonJunction(substitute);
 	}
 	
-	private Node<T> getMostFromLeft(Node<T> node) {
-		while(node.left != null) {
-			node = node.left;
+	private Node<T> getMostNodeFrom(Node<T> node) {
+		while(node.right != null) {
+			node = node.right;
 		}
 		return node;
 	}
-//	private void removeNode(Node<T> node) {
-//		// TODO Auto-generated method stub
-//		if(isJunction(node)) {
-//			removeJunction(node);
-//		} else {
-//			removeNonJunction(node);
-//		}
-//		size--;
-//	}
-//	
-//	private void removeNonJunction(Node<T> node) { 
-//		// TODO Auto-generated method stub
-//		Node<T> parent = node.parent;
-//		if(parent == null) {
-//			removeRoot();
-//		}
-//		Node<T> child = (node.left == null) ? node.right : node.left;
-//		if(child == null) {
-//			if(parent.left == null) {
-//				parent.right = null;
-//			} else {
-//				parent.left = null;
-//			}
-//		}
-//		child.parent = parent;
-//		node.parent = null;
-//		//node.left = node.right = null;
-//	}
-//
-//	private void removeRoot() {
-//		if (root.left != null && root.right != null) {
-//			removeJunction(root);
-//		} else {
-//			if (root.left == null) {
-//				root = root.right;
-//			} else {
-//				root = root.left;
-//			}
-//		}
-//		
-//	}
-//
-//	private void removeJunction(Node<T> node) {
-//		// TODO Auto-generated method stub
-//		Node<T> nodeSubstitute = node.left;
-//		while(nodeSubstitute != null) {
-//			nodeSubstitute = nodeSubstitute.right;
-//		}
-//		node.obj = nodeSubstitute.obj;
-//		removeNonJunction(nodeSubstitute);
-//		
-//	}
-//
-	private boolean isJunction(Node<T> node) {
-		return node.left != null && node.right != null;
+	private void removeNonJunction(Node<T> node) {
+		Node<T> parent = node.parent;
+		Node<T> child = node.left == null ? node.right : node.left;
+		if(parent == null) {
+			root = child;
+		} else {
+			if(node == parent.left) {
+				parent.left = child;
+			} else {
+				parent.right = child;
+			}
+		}
+		if(child != null) {
+			child.parent = parent; 
+		}
+		node.setNulls();
+			
 	}
-
+	
 	@Override
 	public boolean contains(T pattern) {
 		return getNode(pattern) != null;
 	}
-
 	@Override
 	public Iterator<T> iterator() {
 	
 		return new TreeSetIterator();
+	}
+	@Override
+	public T first() {
+		if (root == null) {
+			throw new NoSuchElementException();
+		}
+		return getLeast(root).obj;
+	}
+	@Override
+	public T last() {
+		if (root == null) {
+			throw new NoSuchElementException();
+		}
+		return getMostNodeFrom(root).obj;
+	}
+	@Override
+	public T ceiling(T key) {
+		if (key == null) {
+			throw new NullPointerException();
+		}
+		T res = getNodeParent(key).obj;
+		if(comp.compare(key, res) > 0) {
+			res = getNodeParent(res).parent.obj;
+			if(comp.compare(getNodeParent(key).obj, res) > 0) {
+				res = null;
+			}
+		}
+		return res;
+	}
+	@Override
+	public T floor(T key) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
