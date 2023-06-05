@@ -176,6 +176,7 @@ public class TreeSet<T> implements SortedSet<T> {
 		}
 		return node;
 	}
+	
 	private void removeNonJunction(Node<T> node) {
 		Node<T> parent = node.parent;
 		Node<T> child = node.left == null ? node.right : node.left;
@@ -197,6 +198,7 @@ public class TreeSet<T> implements SortedSet<T> {
 	
 	@Override
 	public boolean contains(T pattern) {
+		
 		return getNode(pattern) != null;
 	}
 	@Override
@@ -220,22 +222,37 @@ public class TreeSet<T> implements SortedSet<T> {
 	}
 	@Override
 	public T ceiling(T key) {
-		if (key == null) {
-			throw new NullPointerException();
-		}
-		T res = getNodeParent(key).obj;
-		if(comp.compare(key, res) > 0) {
-			res = getNodeParent(res).parent.obj;
-			if(comp.compare(getNodeParent(key).obj, res) > 0) {
-				res = null;
-			}
-		}
-		return res;
-	}
+//		if (key == null) {
+//			throw new NullPointerException();
+//		}
+//		T res = getNodeParent(key).obj;
+//		if(comp.compare(key, res) > 0) {
+//			res = getNodeParent(res).parent.obj;
+//			if(comp.compare(getNodeParent(key).obj, res) > 0) {
+//				res = null;
+//			}
+//		}
+//		return res;
+		return floorCeiling(key, false);
+ 	}
 	@Override
 	public T floor(T key) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return floorCeiling(key, true);
 	}
+	
+	private T floorCeiling(T pattern, boolean isFloor) {
+		T res = null;
+		int compRes = 0;
+		Node<T> current = root;
+		while(current != null && (compRes = comp.compare(pattern, current.obj)) != 0 ) {
+			if((compRes < 0 && !isFloor ) || (compRes > 0 && isFloor)) {
+				res = current.obj;
+			}
+			current = compRes < 0 ? current.left : current.right;
+		}
+		return current == null ? res : current.obj;
+	}
+	
 	
 }
