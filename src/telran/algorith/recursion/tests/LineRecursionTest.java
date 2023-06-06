@@ -59,12 +59,14 @@ class LineRecursionTest {
 		assertEquals(-16, LineRecursion.mult(4, -4));
 		assertEquals(-16, LineRecursion.mult(-4, 4));
 	}
-//	@Test
-//	void pow1Test() {
-//		assertEquals(8, LineRecursion.pow1(2, 3));
-//		assertEquals(27, LineRecursion.pow1(3, 3));
-//		assertEquals(27, LineRecursion.pow1(27, 1));
-//		assertEquals(1, LineRecursion.pow1(27, 0));
-//		assertEquals(64, LineRecursion.pow1(4, 3));
-//	}
+
+	@Test
+	void squareTest() {
+		assertEquals(25, LineRecursion.square(-5));
+		assertEquals(0, LineRecursion.square(0));
+		assertEquals(1, LineRecursion.square(-1));
+		assertEquals(49, LineRecursion.square(7));
+	}
+	
+	
 }

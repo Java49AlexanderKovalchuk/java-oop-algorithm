@@ -32,7 +32,7 @@ public class LineRecursion {
 			throw new IllegalArgumentException("Pow cannot be negative value");
 		}
 		long res = 1;
-		int n = 0;
+		
 		if(b > 0) {
 			
 			res = mult(a, (int) pow(a, b - 1));
@@ -76,12 +76,19 @@ public class LineRecursion {
 		if(b < 0) {
 			 res = -a + mult(a, b + 1);
 		}
-//		else {
-//			 res = 0;
-//		}
+
 		return res;
 	}
 	
-	
+	public static long square (int x) {
+		if (x < 0) {
+			x = -x;
+		}
+		long res = 0;
+		if(x != 0) {
+			res =  x + x - 1 + square(x - 1);
+		}
+		return res;
+	}
 	
 }
