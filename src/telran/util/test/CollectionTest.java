@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.nio.file.DirectoryStream.Filter;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Random;
@@ -125,7 +126,6 @@ public abstract class CollectionTest {
 		
 		
 		
-		
 	}
 	@Test
 	void testContains() {
@@ -144,11 +144,36 @@ public abstract class CollectionTest {
 	void clearPerformance() {
 		Collection<Integer> bigCollection = getCollection();
 		Random gen = new Random();
-		for(int i = 0; i < 1000000; i++) {
-			bigCollection.add(gen.nextInt());
-		}
+		int [] array = getRandomArray(1_000_000);
+		fillCollection(bigCollection, array);
 		bigCollection.clear();
 		assertEquals(0, bigCollection.size());
+	}
+	@Test
+	void sunEvenNumbersTest() {
+		assertEquals(170, collection.stream().filter(n -> n % 2 == 0)
+				.mapToInt(n -> n).sum());
+	}
+	@Test
+	void positiveEvenNumbersTest() {
+		int[] expected = {10, 30, 50, 100};
+		assertArrayEquals(expected, 
+				collection.stream().filter(n -> n > 0 && n % 2 == 0)
+				.sorted()
+				.mapToInt(n -> n).toArray());
+	}
+	protected int[] getRandomArray(int length) {
+		Random gen = new Random();
+		int[] res = new int[length];
+		for(int i = 0; i < length; i++) {
+			res[i] = gen.nextInt();
+		}
+		return res;
+	}
+	protected void fillCollection(Collection<Integer> collection, int[] array) {
+		for(int num: array) {
+			collection.add(num);
+		}
 	}
 	protected void runTest(Integer[] expected) {
 		Integer [] actual = collection.toArray(new Integer[0]);

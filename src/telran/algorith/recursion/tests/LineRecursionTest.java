@@ -51,13 +51,14 @@ class LineRecursionTest {
 		assertArrayEquals(expected, LineRecursion.reverse(array));
 		assertArrayEquals(expected1, LineRecursion.reverse(array1));
 	}
-	@Test
+	
+	@Test          // helper function test 
 	void multTest() {
-		assertEquals(12, LineRecursion.mult(-2, -6));
-		assertEquals(0, LineRecursion.mult(2, 0));
-		assertEquals(2, LineRecursion.mult(2, 1));
-		assertEquals(-16, LineRecursion.mult(4, -4));
-		assertEquals(-16, LineRecursion.mult(-4, 4));
+		assertEquals(12, LineRecursion.multiply(-2, -6));
+		assertEquals(0, LineRecursion.multiply(2, 0));
+		assertEquals(2, LineRecursion.multiply(2, 1));
+		assertEquals(-16, LineRecursion.multiply(4, -4));
+		assertEquals(-16, LineRecursion.multiply(-4, 4)); 
 	}
 
 	@Test
@@ -66,6 +67,16 @@ class LineRecursionTest {
 		assertEquals(0, LineRecursion.square(0));
 		assertEquals(1, LineRecursion.square(-1));
 		assertEquals(49, LineRecursion.square(7));
+	}
+	
+	@Test
+	void isSubstringTest() {
+		String string = "earth air fire water";
+		String sbstr = "fire";
+		assertTrue(LineRecursion.isSubstring(string, sbstr));
+		sbstr = "firo";
+		assertFalse(LineRecursion.isSubstring(string, sbstr));
+
 	}
 	
 	

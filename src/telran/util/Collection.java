@@ -3,6 +3,8 @@
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
 
@@ -51,6 +53,11 @@ default boolean isEqual(T object, T pattern) {
 default void clear() {
 	removeIf(element -> true);
 }
-
+default Stream<T> stream() {
+	return StreamSupport.stream(spliterator(), false);
+}
+default Stream<T> parallelStream() {
+	return StreamSupport.stream(spliterator(), true);
+}
 }
  

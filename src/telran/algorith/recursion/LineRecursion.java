@@ -13,21 +13,7 @@ public class LineRecursion {
 		return res;
 	}
 	public static long pow (int a, int b) {
-		//a - any number
-		//b - any positive number or zero
-//		if(b < 0) {
-//			throw new IllegalArgumentException("Pow cannot be negative value");
-//		}
-//		long res = 1;
-//		if(b > 0) {
-//			res = a * pow(a, b - 1); //a^b = a * a^(b - 1)
-//		}
-//		return res;
-		//	TODO HW #18
-		//Limitations: 
-		// 1. no cycles
-		// 2. only + or - for arithmetic operations
-		
+				
 		if(b < 0) {
 			throw new IllegalArgumentException("Pow cannot be negative value");
 		}
@@ -35,7 +21,7 @@ public class LineRecursion {
 		
 		if(b > 0) {
 			
-			res = mult(a, (int) pow(a, b - 1));
+			res = multiply(a, pow(a, b - 1));
 		}
 		return res;
 	
@@ -67,30 +53,43 @@ public class LineRecursion {
 		return array;
 	}
 	
-	public static long mult(int a, int b ) {     //res = a * b
+	public static int multiply(int a, long b ) {     //res = a * b
 	
-		long res = 0;
-		if(b > 0) {
-			 res = a + mult(a, b - 1);			
-		}
-		if(b < 0) {
-			 res = -a + mult(a, b + 1);
+		int res = 0;
+		if(b != 0) {
+			res = b < 0 ? multiply(-a, -b) : a + multiply(a, b - 1);
 		}
 
 		return res;
 	}
 	
 	public static long square (int x) {
-		if (x < 0) {
-			x = -x;
-		}
 		long res = 0;
 		if(x != 0) {
-			res =  x + x - 1 + square(x - 1);
+			res = x < 0 ? square(-x) : x + x - 1 + square(x - 1); 
 		}
 		return res;
 	}
 	
+	public static boolean isSubstring(String string, String substr) {
+		
+		boolean res = false;
+		if(string.length() >= substr.length()) {
+			res = isEqual(string, substr) ? true : isSubstring(string.substring(1), substr);
+		}
+		
+		return res; 
 	
+	}
+	private static boolean isEqual(String string, String substr) {
+		boolean res = false;
+		if(substr.length() == 0) {
+			res = true;
+		}
+		else if(string.charAt(0) == substr.charAt(0)) {
+			res = isEqual(string.substring(1), substr.substring(1));
+		}
+		return res;
+	}
 	
 }
