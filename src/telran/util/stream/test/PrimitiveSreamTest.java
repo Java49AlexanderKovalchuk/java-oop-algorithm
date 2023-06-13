@@ -59,18 +59,15 @@ class PrimitiveSreamTest {
 		//checking that arrays are not the same
 		runArrayNotEqualTest(ar, expected);
 		
-		Collection<Integer> collectionAr = new ArrayList<>();
-		Collection<Integer> collectionExpected = new ArrayList<>();
-		
-		// create two collections based on the ar and expected arrays
-		for(int i = 0; i < ar.length; i++) {
-			collectionAr.add(ar[i]);
-			collectionExpected.add(expected[i]);
-		}
-		
 		// checking that each element of one collection there is in other
-		for(int i = 0; i < collectionAr.size(); i++) {
-			assertTrue(collectionAr.contains((Integer) expected[i]));
+
+		HashSet<Integer> hashSetExpected = new HashSet<>();
+		for(int i = 0; i < ar.length; i++) {
+			hashSetExpected.add(expected[i]);
+		}
+	    
+		for(int i = 0; i < hashSetExpected.size(); i++) {
+			assertTrue(hashSetExpected.contains(ar[i]));
 		}
 	}
 
