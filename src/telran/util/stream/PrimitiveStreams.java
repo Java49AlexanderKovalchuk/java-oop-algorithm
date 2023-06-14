@@ -15,10 +15,10 @@ public class PrimitiveStreams {
 				.distinct().limit(nNumbers).toArray();
 	}
 	
-	static public int[] shuffleArray(int[] ar) {
+	static public int[] shuffle(int[] array) {
 		List <Integer> list = new ArrayList<>(); 
-		new Random().ints(0, ar.length).distinct().limit(ar.length)
-				.forEach(n -> list.add(ar[n]));
+		new Random(). ints(0, array.length).distinct().limit(array.length)
+				.forEach(i -> list.add(array[i]));
 		return list.stream().mapToInt(n -> n).toArray();
 	}
 
