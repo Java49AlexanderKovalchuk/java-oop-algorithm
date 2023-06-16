@@ -145,6 +145,22 @@ public class HashSet<T> implements Set<T> {
 		int index = getHashTableIndex(pattern);
 		return hashTable[index] != null && hashTable[index].contains(pattern);
 	}
+	@Override
+	public T get(T pattern) {
+		T res = null;
+		int index = getHashTableIndex(pattern);
+		if(hashTable[index] != null) {
+			List<T> list = hashTable[index];
+			Iterator<T> it = list.iterator();
+			while(it.hasNext() && res == null) {
+				T obj = it.next();
+				if(obj.equals(pattern)) {
+					res = obj;
+				}
+			}
+		}
+		return res;
+	}
 	
 
 }

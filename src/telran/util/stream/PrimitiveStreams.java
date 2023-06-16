@@ -16,10 +16,12 @@ public class PrimitiveStreams {
 	}
 	
 	static public int[] shuffle(int[] array) {
-		List <Integer> list = new ArrayList<>(); 
-		new Random(). ints(0, array.length).distinct().limit(array.length)
-				.forEach(i -> list.add(array[i]));
-		return list.stream().mapToInt(n -> n).toArray();
+		int[] res = new int[array.length];
+		int [] index = {0};
+		
+		new Random().ints(0, array.length).distinct().limit(array.length)
+				.forEach(i -> res[index[0]++] = array[i]);
+		return res;
 	}
 
 }
