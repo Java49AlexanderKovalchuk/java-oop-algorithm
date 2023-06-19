@@ -3,8 +3,8 @@ package telran.util;
 import java.util.Objects;
 
 public interface Map<K, V> {
-	 static class Entry<K, V> implements Comparable<Entry<K, V>> {
-
+	 
+	static class Entry<K, V> implements Comparable<Entry<K, V>> {
 		@Override
 		public int hashCode() {
 			return Objects.hash(key);

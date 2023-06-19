@@ -48,7 +48,7 @@ default boolean removeIf(Predicate<T> predicate) {
 boolean contains(T pattern); 
 
 default boolean isEqual(T object, T pattern) {
-	return pattern == null  ? object == pattern : pattern.equals(object);
+	return object == null || pattern == null  ? object == pattern : pattern.equals(object);
 }
 default void clear() {
 	removeIf(element -> true);

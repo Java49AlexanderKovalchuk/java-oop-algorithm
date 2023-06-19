@@ -1,4 +1,7 @@
 package telran.util;
+
+import java.util.Arrays;
+
 import telran.util.Collection;
 public abstract class AbstractMap<K, V> implements Map<K, V> {
 	protected Set<Entry<K, V>> set;
@@ -38,11 +41,7 @@ public abstract class AbstractMap<K, V> implements Map<K, V> {
 		if(value == null) {
 			throw new NullPointerException();
 		}
-		// one way
-//		return entrySet().stream().filter(n -> n.getValue()
-//				.equals(value)).toArray().length != 0 ? true : false;
 		
-		//other way more effective:
 		return entrySet().stream().anyMatch(k -> k.getValue().equals(value));
 	}
 
@@ -57,15 +56,10 @@ public abstract class AbstractMap<K, V> implements Map<K, V> {
 	
 	@Override
 	public Collection<V> values() {
-//		Collection<V> res = new ArrayList<>();
-//		// TODO Auto-generated method stub
-//		
-//		set.stream().map(e -> e.getValue()).forEach(v -> res.add(v));
-//		
-		return null;
+		List<V> res = new ArrayList<V>();
+		set.stream().map(e -> e.getValue()).forEach(v -> res.add(v));
+		return res;
 	}
-
-		
 
 	@Override
 	public Set<Entry<K, V>> entrySet() {
@@ -75,10 +69,12 @@ public abstract class AbstractMap<K, V> implements Map<K, V> {
 	
 	@Override
 	public V remove(K key) {
-		
-		V res = get(key);
-		entrySet().removeIf(k -> k.getKey().equals(key));
-				
-		return res ;
+		Entry<K, V> entry = set.get(new Entry<K, V>(key, null));
+		V res = null;
+		if(entry != null) {
+			res = entry.getValue();
+			set.remove(entry);
+		}
+		return res;
 	}
 }
