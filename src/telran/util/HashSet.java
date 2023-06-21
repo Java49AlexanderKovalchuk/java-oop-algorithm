@@ -21,9 +21,7 @@ public class HashSet<T> implements Set<T> {
 			if(currentIteratorIndex > -1) {
 				currentIterator = hashTable[currentIteratorIndex].iterator();
 				
-				
 			}
-			
 			
 		}
 		private int getCurrentIteratorIndex(int currentIndex) {
@@ -59,7 +57,6 @@ public class HashSet<T> implements Set<T> {
 					currentIterator = hashTable[currentIteratorIndex].iterator();
 				}
 			}
-			
 			
 		}
 		@Override

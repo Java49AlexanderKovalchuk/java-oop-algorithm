@@ -90,7 +90,6 @@ TreeSet<Integer> treeSet;
 			balanceOrder(array, middle + 1, right, list);
 		}
 		
-		
 	}
 	
 	@Test
