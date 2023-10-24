@@ -11,6 +11,8 @@ public class JoinStringsPerformanceTest extends PerformanceTest {
 		super(testName, nRuns);
 		this.strings = strings;
 		this.joinStrings = joinStrings;
+		
+		
 	}
 
 	@Override
